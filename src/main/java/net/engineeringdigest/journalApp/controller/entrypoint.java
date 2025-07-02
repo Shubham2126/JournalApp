@@ -35,7 +35,7 @@ public class entrypoint {
         }
     }
 
-    @GetMapping("user/{id}")
+    @GetMapping("journal/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
        Optional<JournalEntry> data = journalEntryService.findById(id);
        if(data.isPresent()) {
@@ -43,12 +43,12 @@ public class entrypoint {
        }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("jouranl/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         journalEntryService.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
-    @PutMapping("user/{id}")
+    @PutMapping("journal/{id}")
     public ResponseEntity<JournalEntry> update(@PathVariable Long id, @RequestBody JournalEntry data) {
         JournalEntry old = journalEntryService.findById(id).orElse(null);
         if(old != null) {
