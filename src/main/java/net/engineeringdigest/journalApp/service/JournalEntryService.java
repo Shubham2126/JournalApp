@@ -6,6 +6,7 @@ import net.engineeringdigest.journalApp.repository.JournalRepo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
-
+    @Transactional
     public void saveEntry(JournalEntry data, String userName) {
         UserEntry userEntry = userService.getUser(userName);
         JournalEntry saved = journalRepo.save(data);
