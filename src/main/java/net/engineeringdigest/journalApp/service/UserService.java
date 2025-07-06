@@ -6,17 +6,31 @@ import net.engineeringdigest.journalApp.repository.JournalRepo;
 import net.engineeringdigest.journalApp.repository.UserRepo;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static java.util.Arrays.asList;
 
 @Service
 public class UserService {
     @Autowired
     public UserRepo userRepo;
 
+    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
     public void register(UserEntry user){
+        userRepo.save(user);
+    }
+
+    public void save(UserEntry user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList("user"));
         userRepo.save(user);
     }
 
