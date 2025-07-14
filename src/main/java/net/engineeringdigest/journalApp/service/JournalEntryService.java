@@ -23,7 +23,7 @@ public class JournalEntryService {
         UserEntry userEntry = userService.getUser(userName);
         JournalEntry saved = journalRepo.save(data);
         userEntry.getEntries().add(saved);
-        userService.register(userEntry);
+        userService.save(userEntry);
     }
 
     public void saveEntry(JournalEntry data) {
@@ -38,11 +38,20 @@ public class JournalEntryService {
         return journalRepo.findById(id);
     }
 
-    public void deleteById(ObjectId id, String userName) {
-        UserEntry userEntry = userService.getUser(userName);
-        userEntry.getEntries().removeIf(entry -> entry.getId().equals(id));
-        userService.register(userEntry);
-        journalRepo.deleteById(id);
-    }
+    public boolean deleteById(ObjectId id, String userName) {
+        boolean removed = false;
 
+        try {
+            UserEntry userEntry = userService.getUser(userName);
+             removed = userEntry.getEntries().removeIf(entry -> entry.getId().equals(id));
+            if (removed) {
+            userService.save(userEntry);
+            journalRepo.deleteById(id);
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting journal entry", e);
+        }
+        return removed;
+    }
 }
